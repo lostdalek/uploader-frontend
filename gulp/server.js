@@ -35,7 +35,7 @@ function browserSyncInit(baseDir, browser) {
    */
     server.middleware = proxyMiddleware('/lightbox2', { //[, '/lightbox'], { //, '/api'
         target: 'http://lostdalek.phraseanet.dev/',
-        proxyHost: true //'parade-ftv.dev'
+        proxyHost: true
     });
 
   browserSync.instance = browserSync.init({

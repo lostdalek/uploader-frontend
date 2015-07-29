@@ -1,29 +1,16 @@
 /// <reference path="../../.tmp/typings/tsd.d.ts" />
 /// <reference path="./app.d.ts" />
 /// <reference path="../theme/client.config.ts" />
-/// <reference path="./components/riot-ts.ts" />
 /// <reference path="./polyfills/console.ts" />
 import {Uploader} from './components/uploader/uploader';
-import {riot, RiotObject, RiotEvents, RiotElement} from './components/riot-ts';
-import {greetings, Person} from './components/greetings';
-import {Timer} from './components/timer/timer';
-import CollectionSelector from './components/collectionSelector';
 import Application from './core/application';
 
-
-
-riot.class(CollectionSelector);
-riot.class(Timer); // wont work in IE8 with getter/setters
-riot.mount('*');   // mounts all elements
+import HomeView from './components/home';
+import NavBladeItemView from './components/navblade/navblade'
 
 
 
-
-var person = new Person("bert");
 $(document).ready(function () {
-    var message = greetings(person);
-    $("#status")[0].innerHTML = message;
-
     new Uploader();
 });
 
@@ -41,22 +28,39 @@ class NavBarItemView extends Marionette.ItemView<NavModel> {
 }
 
 
-
-
-
-var uploaderApp = new Application({
-    rootLayout: "#main-section"
+let uploaderApp = new Application({
+    rootLayout: "#application-container"
 });
+//uploaderApp.router = new AppRouter({ controller: new AppRouteDispatcher() });
 
-uploaderApp.on('start', () => {
-   // console.log('app has started', uploaderApp.mainRegion)
+uploaderApp.on("initialize:after", function(){
+    // Start Backbone history a necessary step for bookmarkable URL's
+    console.log('history started')
+    Backbone.history.start();
 });
-
-
 uploaderApp.on('before:start', () => {
     uploaderApp.setRootLayout('rootLayout');
+    // initialize the router
+
+    Backbone.history.start();
+    console.log('yep done')
     //uploaderApp.getRegion('main').show(uploaderApp.root)
+});
+uploaderApp.on('start', () => {
+    //console.log('app has started', uploaderApp.mainRegion)
+    //uploaderApp.getRegion('rootLayout'); //.render(); //.show( new NavBladeItemView());
+
+    // attach root Layout
+
+
+    uploaderApp.rootLayout.render();
+    console.log('head region:', uploaderApp.rootLayout);
+
+    //uploaderApp.rootLayout.head.show(new NavBladeItemView());
+    // HomeView
 
 });
 
+
+// finally start:
 uploaderApp.start();
