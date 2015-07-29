@@ -1,0 +1,22 @@
+{
+  "name": "uploaderFrontend",
+  "version": "0.0.0",
+  "dependencies": {
+    "modernizr": "~2.6.2",
+    "jquery": "~1.11.3",
+    "bootstrap": "~3.3.4",
+    "es5-shim": "~4.1.10",
+    "riot": "~2.2.2",
+    "plupload": "~2.1.8",
+    "select2-dist": "~4.0.0",
+    "marionette": "~2.4.2"
+  },
+  "devDependencies": {},
+  "overrides": {
+    "plupload": {
+      "main": [
+        "js/plupload.full.min.js"
+      ]
+    }
+  }
+}
