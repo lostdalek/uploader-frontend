@@ -4,10 +4,11 @@
 /// <reference path="./polyfills/console.ts" />
 import {Uploader} from './components/uploader/uploader';
 import Application from './core/application';
+import radioChannels from './core/radioChannels';
 
 import HomeView from './components/home';
 import NavBladeItemView from './components/navblade/navblade'
-
+import {UploaderApi} from './components/uploader/api';
 
 
 $(document).ready(function () {
@@ -31,36 +32,42 @@ class NavBarItemView extends Marionette.ItemView<NavModel> {
 let uploaderApp = new Application({
     rootLayout: "#application-container"
 });
-//uploaderApp.router = new AppRouter({ controller: new AppRouteDispatcher() });
 
-uploaderApp.on("initialize:after", function(){
-    // Start Backbone history a necessary step for bookmarkable URL's
-    console.log('history started')
-    Backbone.history.start();
-});
+let uploader;
+
 uploaderApp.on('before:start', () => {
     uploaderApp.setRootLayout('rootLayout');
-    // initialize the router
-
-    Backbone.history.start();
-    console.log('yep done')
+    Backbone.history.start({pushState: false});
     //uploaderApp.getRegion('main').show(uploaderApp.root)
 });
 uploaderApp.on('start', () => {
-    //console.log('app has started', uploaderApp.mainRegion)
-    //uploaderApp.getRegion('rootLayout'); //.render(); //.show( new NavBladeItemView());
+    uploader = uploaderApp.registerComponent( new UploaderApi() );
 
     // attach root Layout
-
-
     uploaderApp.rootLayout.render();
-    console.log('head region:', uploaderApp.rootLayout);
-
-    //uploaderApp.rootLayout.head.show(new NavBladeItemView());
-    // HomeView
-
+    uploaderApp.rootLayout.getRegion('head').show(new NavBladeItemView());
+    uploaderApp.rootLayout.getRegion('main').show(new HomeView());
+    uploaderApp.rootLayout.getRegion('foot').show(new NavBladeItemView());
 });
 
+//
+// handle main layout routing: @TODO move into an app API and implement uploaderApp.registerAppRoute() / mainComponent
+//
+
+radioChannels.router.on('route:getHomePage', () => {
+   console.log('seems like a route has been triggered')
+    uploaderApp.rootLayout.getRegion('main').show( new HomeView());
+    uploaderApp.rootLayout.getRegion('head').show(new NavBladeItemView());
+});
+
+radioChannels.router.on('route:getUploadPage', () => {
+    //let uploader = new UploaderApi();
+    console.log('seems like a route has been triggered')
+    uploaderApp.rootLayout.getRegion('main').show(uploader.getLayout());
+    uploaderApp.rootLayout.getRegion('head').show(new HomeView());
+});
 
 // finally start:
 uploaderApp.start();
+
+export {uploaderApp};

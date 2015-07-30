@@ -1,43 +1,38 @@
 import {AppRouteDispatcher, AppRouter} from './router';
+import {RootLayoutView, RootLayoutModel} from './rootLayout';
 
-let appTemplate: string = require('../app.hbs');
-
-class ApplicationModel extends Backbone.Model{
-    name: string;
-};
-
-class RootLayoutView extends  Marionette.LayoutView<ApplicationModel> {
-    regions = {
-        head: '#head-container',
-        main: '#main-container',
-        foot: '#foot-container'
-    };
-    template = appTemplate; //'#layout-view-template';
-    destroyImmediate = true;
-    constructor(options?: any) {
-        super(options);
-        /*this.regions = {
-            head: '#head-container',
-            main: '#main-container',
-            foot: '#foot-container'
-        };*/
-
-    }
-}
 
 export default class Application extends Marionette.Application {
+    appRouteDispatcher;
+    components = {};
     router: any;
-    rootLayout: Marionette.LayoutView<ApplicationModel>;
+    rootLayout: Marionette.LayoutView<RootLayoutModel>;
     constructor( rootRegions) {
         super();
         this.addRegions(rootRegions);
-        /*this.on('before:start', () => {
-
-        });*/
         this.rootLayout = new RootLayoutView();
-        this.router = new AppRouter({ controller: new AppRouteDispatcher() });
+        this.on('start', () => {
+            console.log('internal start', this)
+
+            this.appRouteDispatcher = new AppRouteDispatcher();
+
+            this.router = new AppRouter({ controller: new AppRouteDispatcher() });
+        });
     }
     setRootLayout(rootRegion) {
         this.getRegion(rootRegion).show(this.rootLayout);
+    }
+    /*registerAppRoutes(routes) {
+        this.router.processAppRoutes(this.appRouteDispatcher, componentInstance.getRoutes());
+    }*/
+    registerComponent(componentInstance) {
+
+        if( this.components[componentInstance.identifier] === undefined ) {
+            // register routes:
+            this.router.processAppRoutes(componentInstance.getRouteDispatcher(), componentInstance.getRoutes());
+            return componentInstance;
+        }
+        return this.components[componentInstance.identifier];
+
     }
 }
