@@ -49,7 +49,7 @@ export var pluploadConfig = {
     browse_button: 'browse', // this can be an id of a DOM element or the DOM element itself
 }
 
-export class Uploader {
+class PlUpload {
     public plupload = (<any>window).plupload;
     public uploader;
 
@@ -101,3 +101,4 @@ export class Uploader {
     }
 
 }
+export {PlUpload}

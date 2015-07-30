@@ -1,6 +1,7 @@
 import radioChannels from '../../core/radioChannels';
 import UploadLayoutView from './uploaderLayout';
 import HomeView from '../home';
+import UploadFormView from './uploadFormView';
 
 class UploaderRouteDispatcher extends Marionette.Object {
     getDefaultPage() {
@@ -24,22 +25,34 @@ class UploaderApi {
         }
     };
     constructor() {
-
+        console.log('trigger new instance')
+        this.getLayout(true).render();
 
         radioChannels.router.on('route:getUploadPage', () => {
-            console.log('uploader API: seems like a route has been triggered')
+            /*
+            console.log('uploader API: route:getUploadPage')
 
-            this.getLayout(true).render();
-            this.getLayout().getRegion('uploader').show(new HomeView())
+            //this.getLayout(true).render();
+            //this.getLayout().getRegion('uploader').show(new UploadFormView())
+
+
+            // this.getLayout(true).render();
+            console.log('region is up?', this.getLayout().getRegion('uploader'))
+            let uploaderRegion = this.getLayout().getRegion('uploader'),
+                uploadForm = new UploadFormView();
+            uploaderRegion.show(uploadForm);
+            uploadForm.render();
+            */
+            //this.getLayout(true).render();
+            console.log('old instance', this.getLayout())
+            this.getLayout().getRegion('uploader').show(new UploadFormView());
         });
 
         radioChannels.router.on('route:uploader:getDefaultPage', () => {
             console.log('uploader API: route:uploader:getDefaultPage')
             // uploaderApp.rootLayout.getRegion('main').show(new NavBladeItemView());
             // uploaderApp.rootLayout.getRegion('head').show(new HomeView());
-
-            this.getLayout(true).render();
-            this.getLayout().getRegion('uploader').show(new HomeView());
+            this.getLayout().getRegion('uploader').show(new UploadFormView());
         });
     }
 

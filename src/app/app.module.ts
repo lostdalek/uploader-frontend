@@ -2,18 +2,13 @@
 /// <reference path="./app.d.ts" />
 /// <reference path="../theme/client.config.ts" />
 /// <reference path="./polyfills/console.ts" />
-import {Uploader} from './components/uploader/uploader';
+
 import Application from './core/application';
 import radioChannels from './core/radioChannels';
 
 import HomeView from './components/home';
 import NavBladeItemView from './components/navblade/navblade'
 import {UploaderApi} from './components/uploader/api';
-
-
-$(document).ready(function () {
-    new Uploader();
-});
 
 class NavModel extends Backbone.Model{
     name: string;
@@ -47,7 +42,7 @@ uploaderApp.on('start', () => {
     uploaderApp.rootLayout.render();
     uploaderApp.rootLayout.getRegion('head').show(new NavBladeItemView());
     uploaderApp.rootLayout.getRegion('main').show(new HomeView());
-    uploaderApp.rootLayout.getRegion('foot').show(new NavBladeItemView());
+    // uploaderApp.rootLayout.getRegion('foot').show(new NavBladeItemView());
 });
 
 //
@@ -63,11 +58,11 @@ radioChannels.router.on('route:getHomePage', () => {
 radioChannels.router.on('route:getUploadPage', () => {
     //let uploader = new UploaderApi();
     console.log('seems like a route has been triggered')
-    uploaderApp.rootLayout.getRegion('main').show(uploader.getLayout());
-    uploaderApp.rootLayout.getRegion('head').show(new HomeView());
+    uploaderApp.rootLayout.getRegion('head').show(new NavBladeItemView());
+    uploaderApp.rootLayout.getRegion('main').show(uploader.getLayout(true));
 });
 
 // finally start:
+$(document).ready(function () {
 uploaderApp.start();
-
-export {uploaderApp};
+});

@@ -1,0 +1,21 @@
+
+#file-drop{
+  border: 7px dashed #999;
+  text-align: center;
+  color: #999;
+  font-size: 20px;
+  width: 600px;
+  height: 300px;
+  line-height: 300px;
+  cursor: pointer;
+  &.dragover {
+    background: rgba(255, 255, 255, 0.4);
+    border-color: green;
+  }
+}
+.ie8 {
+  #file-drop {
+    display: none;
+  }
+}
+
