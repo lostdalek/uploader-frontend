@@ -1,8 +1,8 @@
 let appTemplate: string = require('./rootLayout.hbs');
 
-export class RootLayoutModel extends Backbone.Model{
+export class RootLayoutModel extends Backbone.Model {
     name: string;
-};
+}
 
 export class RootLayoutView extends  Marionette.LayoutView<RootLayoutModel> {
     /*regions(options: any) {
@@ -13,7 +13,7 @@ export class RootLayoutView extends  Marionette.LayoutView<RootLayoutModel> {
      foot: '#foot-container'
      }
      };*/
-    template = appTemplate; //'#layout-view-template';
+    template = appTemplate;
     destroyImmediate = true;
     constructor(options?: any) {
         super(options);

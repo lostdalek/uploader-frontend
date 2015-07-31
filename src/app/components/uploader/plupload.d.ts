@@ -1,14 +1,14 @@
 // /// <reference path="../jquery/jquery.d.ts" />
 export interface plupload {
-    Uploader: Function
+    Uploader: Function;
 }
 
 interface JQueryPlUploadOptions {
 
 }
 
-interface JQueryPlUpload extends JQuery  {
-    settings:any;
+interface JQueryPlUpload extends JQuery {
+    settings: any;
 }
 
 interface JQuery {

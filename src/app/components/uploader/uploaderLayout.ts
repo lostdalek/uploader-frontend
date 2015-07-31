@@ -1,3 +1,4 @@
+import AnimatedRegion from '../animatedRegion/animatedRegion';
 let layoutTemplate: string = require('./uploaderLayout.hbs');
 
 export class UploadLayoutModel extends Backbone.Model{
@@ -5,15 +6,30 @@ export class UploadLayoutModel extends Backbone.Model{
 };
 
 export default class UploadLayoutView extends  Marionette.LayoutView<UploadLayoutModel> {
-    template = layoutTemplate; //'#layout-view-template';
-    destroyImmediate = true;
+    template;
+    destroyImmediate;
+    regionClass;
     constructor(options?: any) {
+        // options.template = layoutTemplate;
+        this.regionClass = AnimatedRegion;
+        this.destroyImmediate = true;
+        this.template = layoutTemplate;
         super(options);
-
         this.addRegions({
-            uploader: '#upload-container',
-            records: '#record-container'
+            uploader: {
+                selector: '#upload-container',
+                regionType: AnimatedRegion
+            },
+            recordSet: {
+                selector: '#collection-container',
+                regionType: AnimatedRegion
+            },
+            uploadedFiles: {
+                selector: '#uploaded-files-container',
+                regionType: AnimatedRegion
+            }
         });
+        // this.addRegion('uploadedFiles', AnimatedRegion)
 
     }
 }

@@ -21,14 +21,10 @@ export class AppRouter extends Marionette.AppRouter {
             'uploader': 'getUploadPage'
         };
         super(options);
-        this.navigate('',true)
+        this.navigate('', true);
     }
 
     onRoute() {
-        console.log('on route', arguments)
-    }
-
-    addRoutes() {
-
+        console.log('on route', arguments);
     }
 }

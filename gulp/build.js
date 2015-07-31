@@ -85,6 +85,16 @@ gulp.task('other', function () {
     .pipe(gulp.dest(path.join(conf.paths.dist, '/')));
 });
 
+gulp.task('copyUploaderRuntimes', function () {
+    var copyPaths = [];
+
+    copyPaths.push(path.join('../../bower_components/plupload/', '/js', '/Moxie.swf'));
+    copyPaths.push(path.join('../../bower_components/plupload/', '/js', '/Moxie.xap'));
+
+    return gulp.src(copyPaths)
+        .pipe(gulp.dest(path.join(conf.paths.dist, '/assets/')));
+});
+
 
 gulp.task('copyTheme', function () {
     var copyPaths = [];
@@ -104,5 +114,5 @@ gulp.task('clean', ['tsd:purge'], function (done) {
   $.del([path.join(conf.paths.dist, '/'), path.join(conf.paths.tmp, '/')], done);
 });
 
-gulp.task('build', ['html', 'fonts', 'other', 'copyTheme']);
-gulp.task('build:dev', ['html:dev', 'fonts', 'other', 'copyTheme']);
+gulp.task('build', ['html', 'fonts', 'other', 'copyUploaderRuntimes', 'copyTheme']);
+gulp.task('build:dev', ['html:dev', 'fonts', 'other', 'copyUploaderRuntimes', 'copyTheme']);

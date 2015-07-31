@@ -5,9 +5,10 @@ class NavBladeModel extends Backbone.Model{
 };
 
 export default class NavBladeItemView extends Marionette.ItemView<NavBladeModel> {
-    constructor(options?: any) { //  Backbone.ViewOptions<NavModel>
-        if (!options)
+    constructor(options?: any) {
+        if (!options) {
             options = {};
+        }
         options.template = navbladeTemplate;
         super(options);
     }

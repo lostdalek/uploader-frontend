@@ -1,7 +1,9 @@
 import radioChannels from '../../core/radioChannels';
+import CollectionManagerView from '../collectionManager/collectionManagerView';
 import UploadLayoutView from './uploaderLayout';
-import HomeView from '../home';
-import UploadFormView from './uploadFormView';
+import UploadFormView from './views/uploadFormView';
+import FileCollectionView from './views/uploadFileCollectionView';
+import * as entities from '../../entities/entities';
 
 class UploaderRouteDispatcher extends Marionette.Object {
     getDefaultPage() {
@@ -18,6 +20,8 @@ class UploaderRouteDispatcher extends Marionette.Object {
 
 class UploaderApi {
     identifier: string = 'uploaderApi';
+    uploadFileCollection: entities.UploadFileCollection;
+    recordSetCollection: entities.RecordSetCollection;
     layoutInstance: UploadLayoutView;
     channels = {
         route: {
@@ -25,40 +29,30 @@ class UploaderApi {
         }
     };
     constructor() {
-        console.log('trigger new instance')
         this.getLayout(true).render();
 
+        // init models and collections
+        this.uploadFileCollection = new entities.UploadFileCollection();
+        this.recordSetCollection = new entities.RecordSetCollection();
+
+
+
         radioChannels.router.on('route:getUploadPage', () => {
-            /*
-            console.log('uploader API: route:getUploadPage')
-
-            //this.getLayout(true).render();
-            //this.getLayout().getRegion('uploader').show(new UploadFormView())
-
-
-            // this.getLayout(true).render();
-            console.log('region is up?', this.getLayout().getRegion('uploader'))
-            let uploaderRegion = this.getLayout().getRegion('uploader'),
-                uploadForm = new UploadFormView();
-            uploaderRegion.show(uploadForm);
-            uploadForm.render();
-            */
-            //this.getLayout(true).render();
-            console.log('old instance', this.getLayout())
-            this.getLayout().getRegion('uploader').show(new UploadFormView());
+            this.initialize();
+            // this.getLayout().getRegion('uploader').show(new UploadFormView());
+            // this.getLayout().getRegion('collectionManager').show(new CollectionManagerView());
         });
 
         radioChannels.router.on('route:uploader:getDefaultPage', () => {
-            console.log('uploader API: route:uploader:getDefaultPage')
-            // uploaderApp.rootLayout.getRegion('main').show(new NavBladeItemView());
-            // uploaderApp.rootLayout.getRegion('head').show(new HomeView());
-            this.getLayout().getRegion('uploader').show(new UploadFormView());
+            this.initialize();
+            // this.getLayout().getRegion('uploader').show(new UploadFormView());
+            // this.getLayout().getRegion('collectionManager').show(new CollectionManagerView());
+
         });
     }
 
     getLayout(forceNew?: boolean): UploadLayoutView {
-        if( this.layoutInstance instanceof UploadLayoutView && forceNew !== true) {
-            console.log('alreday instance')
+        if ( this.layoutInstance instanceof UploadLayoutView && forceNew !== true) {
             return this.layoutInstance;
         }
         return this.layoutInstance = new UploadLayoutView();
@@ -70,8 +64,20 @@ class UploaderApi {
 
     getRoutes() {
         return {
-            "uploader/default": "getDefaultPage"
-        }
+            'uploader/default': 'getDefaultPage'
+        };
+    }
+
+    initialize() {
+        this.getLayout().getRegion('uploader').show(new UploadFormView({
+            uploadFileCollection: this.uploadFileCollection
+        }));
+        this.getLayout().getRegion('recordSet').show(new CollectionManagerView());
+
+        this.getLayout().getRegion('uploadedFiles').show(new FileCollectionView({
+            collection:  this.uploadFileCollection
+        }));
+
     }
 }
 
