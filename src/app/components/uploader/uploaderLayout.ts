@@ -6,30 +6,34 @@ export class UploadLayoutModel extends Backbone.Model{
 };
 
 export default class UploadLayoutView extends  Marionette.LayoutView<UploadLayoutModel> {
+    options;
     template;
     destroyImmediate;
     regionClass;
     constructor(options?: any) {
-        // options.template = layoutTemplate;
         this.regionClass = AnimatedRegion;
         this.destroyImmediate = true;
         this.template = layoutTemplate;
         super(options);
+
+        if ( this.model === undefined ) {
+            this.model = new UploadLayoutModel({
+                layoutTitle: options.globalConfig.lang.t('app.uploader.title')
+            });
+        }
         this.addRegions({
             uploader: {
                 selector: '#upload-container',
-                regionType: AnimatedRegion
+                animationType: 'zoomIn'
             },
             recordSet: {
-                selector: '#collection-container',
-                regionType: AnimatedRegion
+                selector: '#collection-container'
             },
             uploadedFiles: {
-                selector: '#uploaded-files-container',
-                regionType: AnimatedRegion
+                selector: '#uploaded-files-container'
             }
         });
-        // this.addRegion('uploadedFiles', AnimatedRegion)
 
+        this.render();
     }
 }

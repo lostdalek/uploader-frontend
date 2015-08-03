@@ -77,7 +77,7 @@ gulp.task('scripts', ['hbs-tpl','tsd-scripts'], function () {
             callback();
         }
     };
-    return gulp.src([path.join(conf.paths.tmpts, '/serve/app/app.module.js')])
+    return gulp.src([path.join(conf.paths.tmpts, '/serve/app/app.js')])
         .pipe($.webpack(webpackOptions, null, webpackChangeHandler))
         .pipe(gulp.dest(path.join(conf.paths.tmp, '/serve/app')))
 });

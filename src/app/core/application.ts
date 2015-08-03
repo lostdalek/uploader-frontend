@@ -1,16 +1,19 @@
 import {AppRouteDispatcher, AppRouter} from './router';
-import {RootLayoutView, RootLayoutModel} from './rootLayout';
+import {MainLayoutModel} from '../components/mainLayout/mainLayout';
+import {Config} from '../config/config.global';
 
 
 export default class Application extends Marionette.Application {
     appRouteDispatcher;
     components = {};
+    config: any;
     router: any;
-    rootLayout: Marionette.LayoutView<RootLayoutModel>;
-    constructor( rootRegions: any) {
+    rootLayout: Marionette.LayoutView<MainLayoutModel>;
+    constructor( rootRegions: any, rootLayoutInstance: any) {
         super();
         this.addRegions(rootRegions);
-        this.rootLayout = new RootLayoutView();
+        this.rootLayout = rootLayoutInstance;
+        this.config = new Config();
         this.on('start', () => {
             this.appRouteDispatcher = new AppRouteDispatcher();
             this.router = new AppRouter({ controller: new AppRouteDispatcher() });
@@ -31,5 +34,13 @@ export default class Application extends Marionette.Application {
         }
         return this.components[componentInstance.identifier];
 
+    }
+
+    startWhenReady() {
+        console.log('this.config ', this.config );
+        // start app when config is ready:
+        this.config
+            .initialize()
+            .then( () => this.start() ); // trigger Marionette.Application.start()
     }
 }

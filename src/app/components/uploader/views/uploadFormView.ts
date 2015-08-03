@@ -41,7 +41,6 @@ export default class UploadFormView extends Marionette.ItemView<UploadFormModel>
             'click #file-upload': 'startUpload'
         };
     }
-
     onDomRefresh() {
         var defaults = {
             runtimes : 'html5,flash,silverlight,html4',
@@ -67,6 +66,11 @@ export default class UploadFormView extends Marionette.ItemView<UploadFormModel>
         this.uploader.bind('FilesAdded', (up: any, files: any) => this.onFilesAdded(up, files));
         this.uploader.bind('Init', (up: any, params: any) => this.onUploaderInit(up, params));
         this.uploader.bind('Error', (up: any, err: any) => this.handleUploadErrors(up, err));
+    }
+    onBeforeDestroy() {
+        if ( this.uploader !== undefined ) {
+            this.uploader.destroy();
+        }
     }
 
     onRender() {

@@ -10,7 +10,8 @@
     "select2-dist": "~4.0.0",
     "marionette": "~2.4.2",
     "backbone.radio": "~1.0.0",
-    "animate.css": "~3.3.0"
+    "animate.css": "~3.3.0",
+    "polyglot": "~0.4.3"
   },
   "devDependencies": {},
   "overrides": {

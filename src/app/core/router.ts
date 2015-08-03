@@ -1,14 +1,11 @@
 import radioChannels from './radioChannels';
 
 export class AppRouteDispatcher extends Marionette.Object {
-    getDefaultPage() {
-        console.log('dispatch: get default');
+    routeHome() {
+        radioChannels.router.trigger('route:uploader:initialize');
     }
-    getHomePage() {
-        radioChannels.router.trigger('route:getHomePage');
-    }
-    getUploadPage() {
-        radioChannels.router.trigger('route:getUploadPage');
+    routeUploader() {
+        radioChannels.router.trigger('route:uploader:initialize');
     }
 }
 
@@ -16,9 +13,10 @@ export class AppRouter extends Marionette.AppRouter {
     protected appRoutes;
     constructor(options?: any) {
         this.appRoutes = {
-            '': 'getDefaultPage',
-            'home': 'getHomePage',
-            'uploader': 'getUploadPage'
+            'home': 'routeHome',
+            'uploader': 'routeUploader',
+            '': 'routeHome',
+            '*path': 'routeHome'
         };
         super(options);
         this.navigate('', true);

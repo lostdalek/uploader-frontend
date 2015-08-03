@@ -2,3 +2,32 @@ this is the navblade
 
 <a href="#/home">home</a>
 <a href="#/uploader">uploader</a>
+
+<nav class="navblade navbar {{classes}}">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{{logoLink}}">
+                <img src="{{logoSrc}}" class="logo">
+            </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-6">
+            <ul class="nav navbar-nav navbar-right">
+                <li repeat="nav in navblade.navigation" dropdown>
+                    <a href class="dropdown-toggle {{nav.classes}}" dropdown-toggle>
+                        <span if="!nav.labelAsImage">{{nav.label}}</span>
+
+                        <i if="nav.icon" class="{{nav.iconClasses}}"></i>
+                        <span if="nav.children.length > 0 " class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li repeat="child in nav.children">
+                            <a href="{{child.link}}">{{child.label}}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+

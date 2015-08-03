@@ -18,7 +18,8 @@ export default class CollectionManagerView extends Marionette.ItemView<Collectio
     }
 
 
-    onDomRefresh() {
+    onRender() {
+        console.log('dom refresh collection manager')
         var data = [
             {id: 0, text: 'enhancement'},
             {id: 1, text: 'bug'},

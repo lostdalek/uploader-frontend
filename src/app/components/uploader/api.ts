@@ -6,20 +6,15 @@ import FileCollectionView from './views/uploadFileCollectionView';
 import * as entities from '../../entities/entities';
 
 class UploaderRouteDispatcher extends Marionette.Object {
-    getDefaultPage() {
-        console.log('Uploader API > dispatch: get default');
-        radioChannels.router.trigger('route:uploader:getDefaultPage');
-    }
-    getHomePage() {
-        radioChannels.router.trigger('route:getHomePage');
-    }
-    getUploadPage() {
-        radioChannels.router.trigger('route:getUploadPage');
+    uploaderDefaultRoute() {
+        radioChannels.router.trigger('route:uploader:initialize');
     }
 }
 
 class UploaderApi {
+    options: any;
     identifier: string = 'uploaderApi';
+    globalConfig;
     uploadFileCollection: entities.UploadFileCollection;
     recordSetCollection: entities.RecordSetCollection;
     layoutInstance: UploadLayoutView;
@@ -28,34 +23,43 @@ class UploaderApi {
 
         }
     };
-    constructor() {
-        this.getLayout(true).render();
+    constructor(options) {
+        this.options = _.extend(this.options, options);
 
+        // initialize and render uploader layout:
         // init models and collections
         this.uploadFileCollection = new entities.UploadFileCollection();
         this.recordSetCollection = new entities.RecordSetCollection();
+        this.globalConfig = radioChannels.config.request('all');
 
-
+        // register global app route listener
+        radioChannels.router.on('route:uploader:initialize', () => {
+            this.initializeChildren();
+        });
 
         radioChannels.router.on('route:getUploadPage', () => {
-            this.initialize();
-            // this.getLayout().getRegion('uploader').show(new UploadFormView());
-            // this.getLayout().getRegion('collectionManager').show(new CollectionManagerView());
+            this.initializeChildren();
         });
 
-        radioChannels.router.on('route:uploader:getDefaultPage', () => {
-            this.initialize();
-            // this.getLayout().getRegion('uploader').show(new UploadFormView());
-            // this.getLayout().getRegion('collectionManager').show(new CollectionManagerView());
+        // console.log(this.globalConfig.lang.t('app.name'))
 
-        });
+        // create a new layout instance
+        this.getUploaderLayout(true); //.render();
+        // attach instance to parent
+        options.parentRegion.show(this.getUploaderLayout());
+        // initialize children regions
+        // this.getUploaderLayout().render();
+        this.initializeChildren();
     }
 
-    getLayout(forceNew?: boolean): UploadLayoutView {
+    getUploaderLayout(forceNew?: boolean): UploadLayoutView {
         if ( this.layoutInstance instanceof UploadLayoutView && forceNew !== true) {
             return this.layoutInstance;
         }
-        return this.layoutInstance = new UploadLayoutView();
+        return this.layoutInstance = new UploadLayoutView({
+            globalConfig: this.globalConfig,
+            uploadFileCollection: this.uploadFileCollection
+        });
     }
 
     getRouteDispatcher() {
@@ -64,20 +68,23 @@ class UploaderApi {
 
     getRoutes() {
         return {
-            'uploader/default': 'getDefaultPage'
+            'uploader/default': 'uploaderDefaultRoute'
         };
     }
 
-    initialize() {
-        this.getLayout().getRegion('uploader').show(new UploadFormView({
+    initializeChildren() {
+        this.getUploaderLayout().getRegion('uploader').show(new UploadFormView({
+            globalConfig: this.globalConfig,
             uploadFileCollection: this.uploadFileCollection
         }));
-        this.getLayout().getRegion('recordSet').show(new CollectionManagerView());
-
-        this.getLayout().getRegion('uploadedFiles').show(new FileCollectionView({
-            collection:  this.uploadFileCollection
+        this.getUploaderLayout().getRegion('recordSet').show(new CollectionManagerView({
+            globalConfig: this.globalConfig
         }));
 
+        this.getUploaderLayout().getRegion('uploadedFiles').show(new FileCollectionView({
+            globalConfig: this.globalConfig,
+            collection:  this.uploadFileCollection
+        }));
     }
 }
 
